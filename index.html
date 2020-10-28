@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+        <title>Document</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="conatiner">
+                <div class="tagBlock">
+                    <h2>Tag</h2>
+                    <input id="tagId" placeholder="ilmenskie" value="ilmenskie" />
+                </div>
+                <div class="pageBlock">
+                    <h2>Page</h2>
+                    <div class="pages">
+                        <input id="page1" type="number" min="1" max="100" step="1" value="1" />
+                        <input id="page2" type="number" min="0" max="100" step="1" value="0" />
+                    </div>
+                </div>
+            </div>
+            <button class="downloadBtn">Download All</button>
+            <span class="result"></span>
+        </div>
+        <script>
+            const button = document.querySelector('.downloadBtn')
+            button.addEventListener('click', function () {
+                let span = document.querySelector('.result')
+                let tag = document.getElementById('tagId').value
+                let page1 = document.getElementById('page1').value
+                let page2 = document.getElementById('page2').value
+                const { ipcRenderer } = require('electron')
+                ipcRenderer.send('asynchronous-message', { tag, page1, page2 })
+                ipcRenderer.on('asynchronous-reply', (event, arg) => {
+                    span.textContent = `${arg} изображения сохранено`
+                })
+            })
+        </script>
+    </body>
+</html>
